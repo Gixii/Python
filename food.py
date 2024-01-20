@@ -22,6 +22,6 @@ class Food(Turtle):
         """
         # Generating random coordinates for the food within a specific range
         cor_x = random.randint(-280, 280)  # Random x-coordinate within -280 to 280
-        cor_y = random.randint(-280, 260)  # Random y-coordinate within -280 to 280
+        cor_y = random.randint(-280, 260)  # Random y-coordinate within -280 to 260
         # Moving the food to the randomly generated coordinates
         self.goto(x=cor_x, y=cor_y)
