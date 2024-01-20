@@ -1,57 +1,64 @@
-# Import necessary modules for the game
+# Import necessary modules from the Turtle graphics library
 from turtle import Screen
 import time
-from snake import Snake  # Import the Snake class from a separate file
-from food import Food  # Import the Food class from a separate file
-from scoreboard import Scoreboard  # Import the Scoreboard class from a separate file
 
-# Create the game screen
+# Import classes from separate files (snake.py, food.py, scoreboard.py)
+from snake import Snake
+from food import Food
+from scoreboard import Scoreboard
+
+# Set up the game screen
 screen = Screen()
 screen.setup(width=600, height=600)
 screen.bgcolor("black")
 screen.title("My Snake Game")
-screen.tracer(0)  # Turn off animation
+screen.tracer(0)  # Turn off automatic screen updates
 
-# Initialize game elements: snake, food, scoreboard
+# Create instances of Snake, Food, and Scoreboard classes
 snake = Snake()
 food = Food()
 scoreboard = Scoreboard()
 
-# Listen for user keyboard inputs for controlling the snake
+# Set up event listeners for arrow key presses to control the snake's movement
 screen.listen()
-screen.onkey(snake.up, "Up")  # Bind 'up' key to move up
-screen.onkey(snake.down, "Down")  # Bind 'down' key to move down
-screen.onkey(snake.left, "Left")  # Bind 'left' key to move left
-screen.onkey(snake.right, "Right")  # Bind 'right' key to move right
+screen.onkey(snake.up, "Up")
+screen.onkey(snake.down, "Down")
+screen.onkey(snake.left, "Left")
+screen.onkey(snake.right, "Right")
 
-# Set up the game loop
+# Variable to control the game loop
 is_game_on = True
-while is_game_on:
-    screen.update()  # Update the screen
-    time.sleep(0.1)  # Pause for a short time to control the speed of the game
-    snake.move()  # Move the snake
 
-    # Check if the snake has collided with the food
+# Main game loop
+while is_game_on:
+    screen.update()  # Update the screen manually
+
+    # Introduce a slight delay to control the speed of the snake
+    time.sleep(0.1)
+
+    snake.move()  # Move the snake based on its current direction
+
+    # Detect collisions with food
     if snake.head.distance(food) < 15:
         food.refresh()  # Move the food to a new random location
-        scoreboard.increase_score()  # Increase the score
+        scoreboard.increase_score()  # Increase the player's score
         snake.extend()  # Extend the length of the snake
 
-    # Check if the snake has hit the walls
+    # Detect collisions with the screen boundaries
     if (
         snake.head.xcor() > 280
         or snake.head.xcor() < -280
         or snake.head.ycor() > 280
         or snake.head.ycor() < -280
     ):
-        is_game_on = False  # End the game if the snake hits the walls
-        scoreboard.game_over()  # Display game over message
+        scoreboard.reset()  # Reset the score
+        snake.reset()  # Reset the snake to its initial state
 
-    # Check if the snake has collided with its own tail
+    # Detect collisions with the snake's own tail
     for segment in snake.segments[1:]:
         if snake.head.distance(segment) < 10:
-            is_game_on = False  # End the game if the snake collides with itself
-            scoreboard.game_over()  # Display game over message
+            scoreboard.reset()  # Reset the score
+            snake.reset()  # Reset the snake to its initial state
 
-# Exit the game when the user clicks on the screen
+# The game loop will continue running until the user clicks on the game window to exit
 screen.exitonclick()
